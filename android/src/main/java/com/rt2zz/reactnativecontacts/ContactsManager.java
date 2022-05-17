@@ -53,6 +53,7 @@ public class ContactsManager extends ReactContextBaseJavaModule implements Activ
 
     private static final int REQUEST_OPEN_CONTACT_FORM = 52941;
     private static final int REQUEST_OPEN_EXISTING_CONTACT = 52942;
+    private static final int REQUEST_VIEW_EXISTING_CONTACT = 52943;
 
     private static Promise updateContactPromise;
     private static Promise requestPromise;
@@ -535,7 +536,7 @@ public class ContactsManager extends ReactContextBaseJavaModule implements Activ
             intent.putExtra("finishActivityOnSaveCompleted", true);
 
             updateContactPromise = promise;
-            getReactApplicationContext().startActivityForResult(intent, REQUEST_OPEN_EXISTING_CONTACT, Bundle.EMPTY);
+            getReactApplicationContext().startActivityForResult(intent, REQUEST_VIEW_EXISTING_CONTACT, Bundle.EMPTY);
 
         } catch (Exception e) {
             promise.reject(e.toString());
@@ -1319,7 +1320,7 @@ public class ContactsManager extends ReactContextBaseJavaModule implements Activ
      */
     @Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-        if (requestCode != REQUEST_OPEN_CONTACT_FORM && requestCode != REQUEST_OPEN_EXISTING_CONTACT) {
+        if (requestCode != REQUEST_OPEN_CONTACT_FORM && requestCode != REQUEST_OPEN_EXISTING_CONTACT && requestCode != REQUEST_VIEW_EXISTING_CONTACT) {
             return;
         }
 
@@ -1328,7 +1329,7 @@ public class ContactsManager extends ReactContextBaseJavaModule implements Activ
         }
 
         if (resultCode != Activity.RESULT_OK) {
-            updateContactPromise.resolve(null); // user probably pressed cancel
+            updateContactPromise.resolve(resultCode); // get resultCode...
             updateContactPromise = null;
             return;
         }
