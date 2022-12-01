@@ -1335,7 +1335,7 @@ public class ContactsManager extends ReactContextBaseJavaModule implements Activ
         }
 
         if (data == null) {
-            updateContactPromise.reject("Error received activity result with no data!");
+            updateContactPromise.resolve(resultCode);
             updateContactPromise = null;
             return;
         }
